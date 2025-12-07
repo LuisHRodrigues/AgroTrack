@@ -45,6 +45,9 @@ class EditarRebanhoActivity : BaseActivity() {
             return
         }
 
+        val nomeRebanho = "Rebanho: $nomeRebanhoAtual"
+        binding.textViewNomeRebahno.text = nomeRebanho
+
         configurarSpinners()
         buscarDadosDoRebanho()
         configurarBotoes()
