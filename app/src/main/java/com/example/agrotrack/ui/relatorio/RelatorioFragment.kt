@@ -519,7 +519,7 @@ class RelatorioFragment : Fragment() {
         val barData = BarData(dataSet)
         barData.setValueTextSize(10f)
         barData.setValueTextColor(Color.BLACK)
-        barData.barWidth = 0.6f
+        barData.barWidth = 0.5f
 
         barChart.apply {
             this.data = barData
