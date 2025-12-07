@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 1. O elemento raiz agora é um ScrollView -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fillViewport="true">
+
+    <!-- 2. O LinearLayout que contém todo o conteúdo agora está dentro do ScrollView -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header com ícone e título -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginBottom="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vendas e Receitas"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="35sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Spinner Rebanho(s) envolvido(s) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutRebanhosEnvolvidos"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Rebanho(s) envolvido(s)">
+
+                <AutoCompleteTextView
+                    android:id="@+id/spinnerRebanhosEnvolvidos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <!-- Campo Data da Venda -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutDataVenda"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Data da venda"
+            app:endIconDrawable="@drawable/ic_calendario"
+            app:endIconMode="custom">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dataVenda"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:inputType="date" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo Valor Total (R$) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutValorTotal"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etValorTotal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Valor Total (R$)"
+                android:inputType="numberDecimal"
+                android:textColorHint="#CCCCCC" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Spinner Comprador -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutComprador"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Comprador">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoComprador"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Spinner Método de Pagamento -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutMetodoPagamento"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:hint="Metodo de Pagamento">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoMetodoDePagamento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo Quantidade de Animais -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layoutQuantidadeAnimais"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etQuantidadeAnimais"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Quantidade de Animais"
+                android:inputType="number"
+                android:textColorHint="#CCCCCC" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Checkbox Baixa Automática -->
+        <CheckBox
+            android:id="@+id/cbBaixaAutomatica"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="Baixa Automática no Total de Animais?"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp" />
+
+        <!-- Botão Concluir -->
+        <Button
+            android:id="@+id/btnConcluir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:backgroundTint="#8BC34A"
+            android:paddingStart="48dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="48dp"
+            android:paddingBottom="12dp"
+            android:text="Concluir"
+            android:textColor="#FFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</ScrollView>

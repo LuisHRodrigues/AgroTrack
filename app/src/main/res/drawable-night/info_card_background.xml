@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Um fundo cinza escuro, um pouco mais claro que a superfície -->
+    <solid android:color="#303030"/>
+    <stroke
+        android:width="5dp"
+        android:color="#8BC34A"/>
+    <corners android:radius="12dp"/>
+</shape>

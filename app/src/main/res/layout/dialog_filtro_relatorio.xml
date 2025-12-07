@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Filtrar Relatório"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Filtro por Rebanho -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutFiltroRebanho"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Filtrar por Rebanho (Opcional)">
+
+        <AutoCompleteTextView
+            android:id="@+id/spinnerFiltroRebanho"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Filtro por Data de Início -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutFiltroDataInicio"
+        style="@style/Widget.App.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Data de Início"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_calendario">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFiltroDataInicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:inputType="date" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Filtro por Data de Fim -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layoutFiltroDataFim"
+        style="@style/Widget.App.TextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Data de Fim"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_calendario">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFiltroDataFim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:inputType="date" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

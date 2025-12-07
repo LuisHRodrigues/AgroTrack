@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_tela_inicial">
+
+    <fragment
+        android:id="@+id/nav_cadastroRebanho"
+        android:name="com.example.agrotrack.ui.cadastro_rebanho.CadastroFragment"
+        android:label="@string/menu_cadastroRebanho"
+        tools:layout="@layout/fragment_cadastro" />
+
+    <fragment
+        android:id="@+id/nav_tela_inicial"
+        android:name="com.example.agrotrack.ui.home.HomeFragment"
+        android:label="@string/menu_tela_inicial"
+        tools:layout="@layout/fragment_tela_inicial" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_editarRebanho"
+        android:name="com.example.agrotrack.ui.editar.SelecaoRebanhoFragment"
+        android:label="@string/menu_editarRebanho"
+        tools:layout="@layout/fragment_selecao_editar_rebanho" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_relatorio"
+        android:name="com.example.agrotrack.ui.relatorio.RelatorioFragment"
+        android:label="@string/menu_relatorio"
+        tools:layout="@layout/fragment_relatorio" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_excluirRebanho"
+        android:name="com.example.agrotrack.ui.excluir.ExcluirFragment"
+        android:label="@string/menu_excluirRebanho"
+        tools:layout="@layout/fragment_excluir_rebanho" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_custosDespesas"
+        android:name="com.example.agrotrack.ui.custos.Custos_e_DespesasFragment"
+        android:label="@string/menu_custos_e_despesas"
+        tools:layout="@layout/fragment_custos_e_despesas" >
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_vendasReceitas"
+        android:name="com.example.agrotrack.ui.vendas.Vendas_e_ReceitasFragment"
+        android:label="@string/menu_vendas_e_receitas"
+        tools:layout="@layout/fragment_vendas_e_receitas" >
+    </fragment>
+
+
+
+</navigation>

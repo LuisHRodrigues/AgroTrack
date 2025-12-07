@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <!-- O quadradinho colorido -->
+    <View
+        android:id="@+id/legendColorView"
+        android:layout_width="14dp"
+        android:layout_height="14dp"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- O nome da categoria -->
+    <TextView
+        android:id="@+id/legendTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nome da Categoria"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="14sp"/>
+</LinearLayout>

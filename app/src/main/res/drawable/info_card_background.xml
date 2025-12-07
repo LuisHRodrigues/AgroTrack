@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Usa a cor de superfície do tema para o fundo -->
+    <solid android:color="?attr/colorSurface"/>
+    <stroke
+        android:width="5dp"
+        android:color="#8BC34A"/>
+    <corners android:radius="12dp"/>
+</shape>

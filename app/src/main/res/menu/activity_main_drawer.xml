@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_tela_inicial"
+            android:icon="@drawable/ic_home"
+            android:title="@string/menu_tela_inicial" />
+
+        <item
+            android:id="@+id/nav_cadastroRebanho"
+            android:icon="@drawable/ic_menu_cadastrar_rebanho"
+            android:title="@string/menu_cadastroRebanho" />
+        <item
+            android:id="@+id/nav_editarRebanho"
+            android:icon="@drawable/ic_menu_editar_rebanho"
+            android:title="@string/menu_editarRebanho" />
+        <item
+            android:id="@+id/nav_custosDespesas"
+            android:icon="@drawable/ic_custos"
+            android:title="@string/menu_custos_e_despesas" />
+        <item
+            android:id="@+id/nav_vendasReceitas"
+            android:icon="@drawable/ic_sale"
+            android:title="@string/menu_vendas_e_receitas" />
+        <item
+            android:id="@+id/nav_excluirRebanho"
+            android:icon="@drawable/ic_excluir"
+            android:title="@string/menu_excluirRebanho" />
+        <item
+            android:id="@+id/nav_relatorio"
+            android:icon="@drawable/ic_resume"
+            android:title="@string/menu_relatorio" />
+
+
+    </group>
+</menu>

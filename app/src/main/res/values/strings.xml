@@ -1,0 +1,98 @@
+<resources>
+    <string name="app_name">AgroTrack</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_tela_inicial">Tela Inicial</string>
+    <string name="menu_cadastroRebanho">Cadastrar Rebanho</string>
+    <string name="menu_editarRebanho">Editar Rebanho</string>
+    <string name="menu_relatorio">Relátorio</string>
+    <string name="menu_excluirRebanho">Excluir Rebanho</string>
+
+
+    <string-array name="origem_rebanho">
+        <item>Compra</item>
+        <item>Nascido na Fazenda</item>
+        <item>Transferencia Interna</item>
+    </string-array>
+
+    <string-array name="tipo_gado">
+        <item>Cria</item>
+        <item>Recria</item>
+        <item>Engorda</item>
+        <item>Matrizes</item>
+        <item>Leiteiro</item>
+        <item>Misto</item>
+    </string-array>
+
+    <string-array name="compradores">
+        <item>Frigorifico</item>
+        <item>Leilão</item>
+    </string-array>
+
+    <string-array name="metodos_pagamento">
+        <item>Pix</item>
+        <item>Cheque</item>
+        <item>Boleto Bancário</item>
+        <item>Dinheiro</item>
+    </string-array>
+
+    <string-array name="tipos_custo">
+        <item>Alimentação</item>
+        <item>Medicamentos</item>
+        <item>Mão de Obra</item>
+        <item>Manutenção</item>
+        <item>Impostos</item>
+        <item>Outros</item>
+    </string-array>
+
+    <string-array name="subcategorias_alimentacao">
+        <item>Ração</item>
+        <item>Sal Mineral</item>
+        <item>Silagem</item>
+        <item>Outra Alimentação</item>
+    </string-array>
+
+    <string-array name="subcategorias_medicamentos">
+        <item>Vacinas</item>
+        <item>Vermífugos</item>
+        <item>Antibióticos</item>
+        <item>Outros Medicamentos</item>
+    </string-array>
+
+    <string-array name="subcategorias_mao_de_obra">
+        <item>Salário Fixo</item>
+        <item>Diarista</item>
+        <item>Serviço Terceirizado</item>
+    </string-array>
+
+    <string-array name="subcategorias_manutencao">
+        <item>Cercas</item>
+        <item>Maquinário</item>
+        <item>Instalações</item>
+    </string-array>
+
+    <string-array name="subcategorias_outros">
+        <item>Custo Genérico</item>
+    </string-array>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sair">Sair</string>
+    <string name="menu_custos_e_despesas">Custos e Despesas</string>
+    <string name="menu_vendas_e_receitas">Vendas e Receitas</string>
+
+
+</resources>
