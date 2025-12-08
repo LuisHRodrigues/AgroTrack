@@ -82,7 +82,7 @@ class RelatorioFragment : Fragment() {
             mostrarDialogoFiltro()
         }
 
-        // --- NOVO: CONFIGURA LISTENERS PARA OS FILTROS PREDEFINIDOS ---
+        // CONFIGURA LISTENERS PARA OS FILTROS PREDEFINIDOS
         setupFiltrosPredefinidosListeners()
 
         // Carrega os dados uma vez sem filtro ao iniciar
@@ -126,7 +126,6 @@ class RelatorioFragment : Fragment() {
 
 
     private fun mostrarDialogoFiltro() {
-        // ... (código da função mostrarDialogoFiltro continua EXATAMENTE IGUAL)
         val builder = AlertDialog.Builder(requireContext())
         val inflater = requireActivity().layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_filtro_relatorio, null)
@@ -184,7 +183,6 @@ class RelatorioFragment : Fragment() {
 
 
     private fun carregarDadosDoRelatorio() {
-        // ... (código da função carregarDadosDoRelatorio continua EXATAMENTE IGUAL)
         val email = auth.currentUser?.email ?: return
         binding.progressBar.visibility = View.VISIBLE
         limparUI()

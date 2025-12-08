@@ -110,7 +110,7 @@ class LoginActivity : BaseActivity() {
         }
     }
 
-    // --- FLUXO 1: LOGIN COM EMAIL E SENHA ---
+    // LOGIN COM EMAIL E SENHA
 
     /**
      * Autentica o usuário no Firebase usando E-mail e Senha.
@@ -132,7 +132,7 @@ class LoginActivity : BaseActivity() {
             }
     }
 
-    // --- FLUXO 2: LOGIN COM CREDENTIAL MANAGER (GOOGLE, PASSKEYS, SENHAS SALVAS) ---
+    // LOGIN COM CREDENTIAL MANAGER (GOOGLE, PASSKEYS, SENHAS SALVAS)
 
     /**
      * Inicia o fluxo de login unificado via CredentialManager.
@@ -204,7 +204,7 @@ class LoginActivity : BaseActivity() {
                     }
             }
 
-            // CASO 4: Tipo genérico de credencial.
+            // CASO 2: Tipo genérico de credencial.
             is CustomCredential -> {
                 Log.d("LoginActivity", "Credencial recebida: CustomCredential (tipo: ${credential.type})")
                 // Verifica se é o tipo específico do Google (redundante, mas seguro)
@@ -232,7 +232,7 @@ class LoginActivity : BaseActivity() {
                 }
             }
 
-            // CASO 5: Tipo desconhecido (tratamento de erro).
+            // CASO 3: Tipo desconhecido (tratamento de erro).
             else -> {
                 Log.e("LoginActivity", "Tipo de credencial inesperado: ${credential.javaClass.name}")
                 Toast.makeText(this, "Tipo de credencial não suportado.", Toast.LENGTH_SHORT).show()

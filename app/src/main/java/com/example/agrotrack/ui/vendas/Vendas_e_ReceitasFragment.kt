@@ -137,7 +137,7 @@ class Vendas_e_ReceitasFragment : Fragment() {
             binding.layoutValorTotal.error = null
         }
 
-        // 4. Valida Quantidade (Lógica Crítica)
+        // 4. Valida Quantidade
         if (qtdVenda == null || qtdVenda <= 0) {
             binding.layoutQuantidadeAnimais.error = "Qtd inválida"
             isValid = false
