@@ -330,7 +330,6 @@ data class CustoDataClass(
 ## 🎨 Padrões e Arquitetura
 
 ### **Padrões Utilizados**
-- **MVVM (Model-View-ViewModel)**: Separação de responsabilidades com LiveData e ViewModel
 - **Repository Pattern**: Acesso centralizado aos dados do Firebase
 - **Data Classes**: Modelos imutáveis para representação de dados
 - **View Binding**: Substituição segura do findViewById
