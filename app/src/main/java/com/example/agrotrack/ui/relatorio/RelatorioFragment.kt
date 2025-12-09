@@ -49,17 +49,20 @@ import java.util.Locale
 
 class RelatorioFragment : Fragment() {
 
+    // Gerencia a ligação direta com os componentes do layout XML (ViewBinding)
     private var _binding: FragmentRelatorioBinding? = null
     private val binding get() = _binding!!
 
+    // Instâncias do Firebase para autenticação e banco de dados
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
 
-    // Variáveis para armazenar os filtros selecionados
+    // Variáveis de estado para armazenar os filtros atuais aplicados pelo usuário
     private var filtroDataInicio: Date? = null
     private var filtroDataFim: Date? = null
-    private var filtroRebanho: String? = null // Pode ser nulo para "Todos"
+    private var filtroRebanho: String? = null // Null indica que deve buscar "Todos"
 
+    // Formatador padrão de data (Dia/Mês/Ano)
     private val formatoData =
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
@@ -74,6 +77,7 @@ class RelatorioFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Inicializa o Firebase
         auth = Firebase.auth
         db = Firebase.firestore
 
@@ -82,14 +86,14 @@ class RelatorioFragment : Fragment() {
             mostrarDialogoFiltro()
         }
 
-        // CONFIGURA LISTENERS PARA OS FILTROS PREDEFINIDOS
+        // Configura os cliques nos "Chips" (botões arredondados) para filtros rápidos
         setupFiltrosPredefinidosListeners()
 
-        // Carrega os dados uma vez sem filtro ao iniciar
+        // Carrega os dados iniciais sem nenhum filtro aplicado
         carregarDadosDoRelatorio()
     }
 
-    // --- NOVA FUNÇÃO PARA OS CHIPS ---
+    // --- Configura os cliques nos botões de filtro rápido ---
     private fun setupFiltrosPredefinidosListeners() {
         binding.chipFiltroSemanal.setOnClickListener { aplicarFiltroPredefinido("semanal") }
         binding.chipFiltroMensal.setOnClickListener { aplicarFiltroPredefinido("mensal") }
@@ -97,11 +101,12 @@ class RelatorioFragment : Fragment() {
         binding.chipFiltroAnual.setOnClickListener { aplicarFiltroPredefinido("anual") }
     }
 
-    // --- NOVA FUNÇÃO PARA CALCULAR AS DATAS E APLICAR O FILTRO ---
+    // --- Lógica para calcular datas baseada nos botões rápidos (Chips) ---
     private fun aplicarFiltroPredefinido(tipo: String) {
         val calendar = Calendar.getInstance()
         filtroDataFim = calendar.time // A data final é sempre "hoje"
 
+        // Subtrai dias/meses/anos da data atual para achar a data de início
         when (tipo) {
             "semanal" -> {
                 calendar.add(Calendar.DAY_OF_YEAR, -7)
@@ -120,21 +125,22 @@ class RelatorioFragment : Fragment() {
                 filtroDataInicio = calendar.time
             }
         }
-        // Após calcular as datas, recarrega o relatório
+        // Após definir as datas nas variáveis globais, atualiza o relatório
         carregarDadosDoRelatorio()
     }
 
-
+    // --- Exibe um popup (Dialog) para o usuário escolher filtros manualmente ---
     private fun mostrarDialogoFiltro() {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = requireActivity().layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_filtro_relatorio, null)
 
+        // Referências aos campos dentro do Dialog
         val spinnerFiltroRebanho = dialogView.findViewById<AutoCompleteTextView>(R.id.spinnerFiltroRebanho)
         val etDataInicio = dialogView.findViewById<TextInputEditText>(R.id.etFiltroDataInicio)
         val etDataFim = dialogView.findViewById<TextInputEditText>(R.id.etFiltroDataFim)
 
-        // Preenche o spinner de rebanhos
+        // Busca nomes dos rebanhos em segundo plano para preencher a lista de seleção
         CoroutineScope(Dispatchers.Main).launch {
             auth.currentUser?.email?.let { email ->
                 val nomesRebanhos = buscarTodosOsRebanhos(email).map { it.nome }
@@ -148,30 +154,32 @@ class RelatorioFragment : Fragment() {
             }
         }
 
-        // Listeners para abrir o DatePickerDialog
+        // Abre o calendário visual ao clicar nos campos de data
         etDataInicio.setOnClickListener { showDatePickerDialog(etDataInicio) }
         etDataFim.setOnClickListener { showDatePickerDialog(etDataFim) }
 
         builder.setView(dialogView)
             .setPositiveButton("Aplicar") { _, _ ->
-                // Desmarca os chips para indicar que um filtro manual está ativo
+                // Limpa seleção dos chips rápidos pois o usuário está usando filtro manual
                 binding.chipGroupFiltros.clearCheck()
 
-                // Captura os valores do filtro
+                // Salva o rebanho escolhido na variável global
                 val rebanhoSelecionado = spinnerFiltroRebanho.text.toString()
                 filtroRebanho = if (rebanhoSelecionado.isBlank() || rebanhoSelecionado == "Todos os Rebanhos") null else rebanhoSelecionado
 
+                // Converte as strings de data para objetos Date e salva
                 try {
                     filtroDataInicio = if (etDataInicio.text.toString().isNotEmpty()) formatoData.parse(etDataInicio.text.toString()) else null
                     filtroDataFim = if (etDataFim.text.toString().isNotEmpty()) formatoData.parse(etDataFim.text.toString()) else null
                 } catch (e: Exception) {
                     Toast.makeText(requireContext(), "Formato de data inválido.", Toast.LENGTH_SHORT).show()
                 }
+                // Recarrega o relatório com os novos filtros manuais
                 carregarDadosDoRelatorio()
             }
             .setNegativeButton("Cancelar", null)
             .setNeutralButton("Limpar") { _, _ ->
-                // Limpa os filtros e os chips, depois recarrega os dados
+                // Reseta tudo (filtros e variáveis) e recarrega
                 binding.chipGroupFiltros.clearCheck()
                 filtroRebanho = null
                 filtroDataInicio = null
@@ -181,21 +189,21 @@ class RelatorioFragment : Fragment() {
             .show()
     }
 
-
+    // --- FUNÇÃO PRINCIPAL: Orquestra a busca, filtragem e exibição dos dados ---
     private fun carregarDadosDoRelatorio() {
         val email = auth.currentUser?.email ?: return
         binding.progressBar.visibility = View.VISIBLE
-        limparUI()
+        limparUI() // Zera os textos e gráficos antes de carregar novos
 
+        // Inicia uma Corrotina (thread paralela) para não travar a tela durante o acesso ao banco
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // 1. Decide quais rebanhos buscar com base no filtro
+                // PASSO 1: Determina quais rebanhos buscar (um específico ou todos)
                 val rebanhosParaBuscar = if (filtroRebanho != null) {
                     listOfNotNull(buscarUmRebanho(email, filtroRebanho!!))
                 } else {
                     buscarTodosOsRebanhos(email)
                 }
-
                 if (rebanhosParaBuscar.isEmpty()) {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), "Nenhum rebanho encontrado.", Toast.LENGTH_LONG).show()
@@ -204,7 +212,7 @@ class RelatorioFragment : Fragment() {
                     return@launch
                 }
 
-                // 2. Busca vendas e custos para os rebanhos selecionados
+                // PASSO 2: Busca TODAS as vendas e custos dos rebanhos selecionados no Firebase
                 val todasAsVendas = mutableListOf<VendaDataClass>()
                 val todosOsCustos = mutableListOf<CustoDataClass>()
 
@@ -213,11 +221,12 @@ class RelatorioFragment : Fragment() {
                     todosOsCustos.addAll(buscarCustosPorRebanho(email, rebanho.nome))
                 }
 
-                // 3. APLICA O FILTRO DE DATA
+                // PASSO 3: Aplica o filtro de DATA na memória (lista local)
+                // Remove itens que estão fora do intervalo de datas selecionado
                 val vendasFiltradas = filtrarListaPorData(todasAsVendas) { it.dataVenda }
                 val custosFiltrados = filtrarListaPorData(todosOsCustos) { it.dataCusto }
 
-                // 4. CHAMA A FUNÇÃO DE PROCESSAMENTO COM OS DADOS CORRETOS
+                // PASSO 4: Volta para a Thread Principal (Main) para atualizar a tela com os dados processados
                 withContext(Dispatchers.Main) {
                     processarEExibirResultados(rebanhosParaBuscar, vendasFiltradas, custosFiltrados)
                 }
@@ -232,7 +241,8 @@ class RelatorioFragment : Fragment() {
         }
     }
 
-    // --- FUNÇÕES DE BUSCA ---
+    // --- FUNÇÕES DE ACESSO AO BANCO DE DADOS (Firestore) ---
+    // 'suspend' indica que a função pode ser pausada e retomada (bom para operações IO)
     private suspend fun buscarTodosOsRebanhos(email: String): List<RebanhoDataClass> {
         val snapshot = db.collection("Usuarios").document(email).collection("Rebanhos").get().await()
         return snapshot.toObjects(RebanhoDataClass::class.java)
@@ -257,19 +267,21 @@ class RelatorioFragment : Fragment() {
         return snapshot.toObjects(CustoDataClass::class.java)
     }
 
-    // --- FUNÇÃO DE FILTRO GENÉRICA ---
+    // --- Lógica Genérica de Filtro de Data ---
+    // <T> significa que funciona para qualquer tipo de objeto (Venda ou Custo)
     private fun <T> filtrarListaPorData(lista: List<T>, extrairDataString: (T) -> String): List<T> {
         if (filtroDataInicio == null && filtroDataFim == null) {
-            return lista // Sem filtro de data, retorna a lista inteira
+            return lista // Se não tem filtro, retorna tudo
         }
         return lista.filter { item ->
             try {
+                // Converte a string de data do objeto para um Date real
                 val dataString = extrairDataString(item)
                 if (dataString.isBlank()) return@filter false
 
                 val dataItem = formatoData.parse(dataString) ?: return@filter false
 
-                // Compara a data do item com os filtros (se existirem)
+                // Verifica se a data do item está DENTRO do intervalo escolhido
                 val depoisDoInicio = filtroDataInicio?.let { dataItem.after(it) || dataItem == it } ?: true
                 val antesDoFim = filtroDataFim?.let { dataItem.before(it) || dataItem == it } ?: true
 
@@ -281,25 +293,28 @@ class RelatorioFragment : Fragment() {
         }
     }
 
-    // --- FUNÇÃO DE PROCESSAMENTO (RECEBENDO OS PARÂMETROS CORRETOS) ---
+    // --- CÁLCULOS MATEMÁTICOS E ATUALIZAÇÃO DA TELA ---
     private fun processarEExibirResultados(
         rebanhos: List<RebanhoDataClass>,
         vendas: List<VendaDataClass>,
         custos: List<CustoDataClass>
     ) {
-        // --- Cálculos ---
+        // --- Faz os somatórios (receita, custos, animais) ---
         val receitaTotal = vendas.sumOf { it.valorTotal }
         val custoTotal = custos.sumOf { it.valorTotal }
         val totalAnimais = rebanhos.sumOf { it.quantidadeInicial }
         val totalAnimaisVendidos = vendas.sumOf { it.quantidadeAnimais }
+
+        // Filtra e soma custos específicos (Vacinas e Ração)
         val despesasVacinas = custos.filter { it.subcategoria.equals("Vacinas", ignoreCase = true) }.sumOf { it.valorTotal }
         val despesasRacao = custos.filter { it.subcategoria.equals("Ração", ignoreCase = true) }.sumOf { it.valorTotal }
 
-        // Investimento em Compra de Animais ---
-        // Filtra a lista de rebanhos baseada na data de compra
+        // --- Cálculo do Investimento Inicial (Compra dos Animais) ---
+        // Aplica o mesmo filtro de data na data de compra do rebanho
         val rebanhosNoPeriodo = filtrarListaPorData(rebanhos) { it.dataCompra }
-        //Soma o valor de compra (trata nulos como 0.0)
         val investimentoCompraAnimais = rebanhosNoPeriodo.sumOf { it.valorCompra ?: 0.0 }
+
+        // Despesa total inclui custos operacionais + compra dos animais
         val despesaTotalGeral = custoTotal + investimentoCompraAnimais
         val lucroPrejuizo = receitaTotal - despesaTotalGeral
 
@@ -311,10 +326,11 @@ class RelatorioFragment : Fragment() {
             }
         // --- FIM Cálculos ---
 
-        // PADRONIZAÇÃO DE FORMATAÇÃO
+        // --- Agrupamento para gráfico de categorias ---
+        // Cria um mapa: "Remédio" -> 500.00, "Ração" -> 1200.00
         val formatoMoeda = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
 
-        // --- Atualização dos TextViews ---
+        // --- Preenche os TextViews na tela ---
         binding.tvReceitaTotal.text = formatoMoeda.format( receitaTotal)
         binding.tvCustoTotal.text = formatoMoeda.format( despesaTotalGeral)
         binding.tvLucroPrejuizo.text = formatoMoeda.format( lucroPrejuizo)
@@ -325,10 +341,11 @@ class RelatorioFragment : Fragment() {
         binding.tvDespesasCompraAnimais.text = formatoMoeda.format(investimentoCompraAnimais)
         binding.tvDespesasVacinas.text = formatoMoeda.format(despesasVacinas)
 
+        // Muda a cor do texto para verde (lucro) ou vermelho (prejuízo)
         val cor = if (lucroPrejuizo >= 0) ContextCompat.getColor(requireContext(), R.color.lucro) else ContextCompat.getColor(requireContext(), R.color.prejuizo)
         binding.tvLucroPrejuizo.setTextColor(cor)
 
-        // --- Gráficos ---
+        // --- Prepara dados e chama funções para desenhar os gráficos ---
         val receitasPorRebanho = vendas.groupBy { it.rebanhoEnvolvido }.mapValues { entry -> entry.value.sumOf { it.valorTotal } }
         val animaisPorRebanho = rebanhos.associate { it.nome to it.quantidadeInicial.toDouble() }
 
@@ -340,6 +357,7 @@ class RelatorioFragment : Fragment() {
         binding.progressBar.visibility = View.GONE
     }
 
+    // --- Restaura a interface para valores zerados ---
     private fun limparUI() {
 
         // PADRONIZAÇÃO DE FORMATAÇÃO
@@ -361,19 +379,23 @@ class RelatorioFragment : Fragment() {
         //Não limpa o progress bar aqui para evitar piscar
     }
 
+    // --- Configuração do Gráfico de Pizza (Cores, animação, dados) ---
     private fun setupPieChart(pieChart: com.github.mikephil.charting.charts.PieChart, title: String, data: Map<String, Double>) {
         if (data.isEmpty()) {
-            pieChart.clear()
+            pieChart.clear() // Limpa se não houver dados
             pieChart.centerText = title
             pieChart.setCenterTextSize(14f)
             pieChart.invalidate()
             return
         }
 
+        // Converte o Map de dados para entradas do gráfico (PieEntry)
         val entries = ArrayList<PieEntry>()
         data.forEach { (label, value) ->
             entries.add(PieEntry(value.toFloat(), label))
         }
+
+        // Configura aparência (cores, espaçamento)
         val dataSet = PieDataSet(entries, "")
         dataSet.sliceSpace = 3f
         dataSet.selectionShift = 5f
@@ -398,16 +420,20 @@ class RelatorioFragment : Fragment() {
             this.setEntryLabelTextSize(12f)
             this.centerText = title
             this.setCenterTextSize(14f)
-            this.animateY(1400, Easing.EaseInOutQuad)
-            this.invalidate()
+            this.animateY(1400, Easing.EaseInOutQuad) // Animação
+            this.invalidate() // Força redesenho
         }
     }
 
+    // --- Configuração do Gráfico de Barras Principal (Receita vs Custo) ---
     private fun setupBarChart(receita: Float, custo: Float) {
+
+        // Cria duas barras: índice 0 para Receita, índice 1 para Custo
         val entries = ArrayList<BarEntry>()
         entries.add(BarEntry(0f, receita, "Receita"))
         entries.add(BarEntry(1f, custo, "Custo"))
 
+        // Configura cores diferentes para lucro (verde) e prejuízo/custo (vermelho)
         val receitaDataSet = BarDataSet(listOf(BarEntry(0f, receita)), "Receita")
         receitaDataSet.color = ContextCompat.getColor(requireContext(), R.color.lucro)
 
@@ -440,6 +466,7 @@ class RelatorioFragment : Fragment() {
         binding.barChart.invalidate()
     }
 
+    // --- Helper para exibir o calendário nativo do Android ---
     private fun showDatePickerDialog(editText: TextInputEditText) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
@@ -449,6 +476,7 @@ class RelatorioFragment : Fragment() {
         val datePickerDialog = android.app.DatePickerDialog(
             requireContext(),
             { _, selectedYear, selectedMonth, selectedDay ->
+                // Formata e coloca a data escolhida no campo de texto
                 val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
                 editText.setText(selectedDate)
             },
@@ -459,15 +487,12 @@ class RelatorioFragment : Fragment() {
         datePickerDialog.show()
     }
 
-    /**
-     * Configura um gráfico de barras e uma legenda customizada para as despesas por categoria.
-     * @param data Um mapa onde a chave é o nome da categoria e o valor é a soma das despesas.
-     */
+    // Formata e coloca a data escolhida no campo de texto
     private fun setupCategoryBarChart(data: Map<String, Double>) {
         val barChart = binding.barChartDespesasCategoria
         val legendContainer = binding.legendContainer
 
-        // 1. Limpa o gráfico e a legenda antiga antes de adicionar novos dados
+        // Limpa legendas antigas
         barChart.clear()
         legendContainer.removeAllViews()
 
